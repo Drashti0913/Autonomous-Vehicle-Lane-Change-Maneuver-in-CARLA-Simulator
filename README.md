@@ -80,8 +80,8 @@ CARLA is an open-source self-driving simulator designed for modularity and flexi
 ## Contact
 
 - **Drashti Bhavsar**
-  - Email: [drashti.bhavsar09@gmail.com](mailto:drashti.bhavsar09@gmail.com)
-  - Phone: +91 6354789967
+  - Email: [drashtibhavsar09@gmail.com](mailto:drashtibhavsar09@gmail.com)
+  - Phone: +1 8573976380
 
 ## References
 
