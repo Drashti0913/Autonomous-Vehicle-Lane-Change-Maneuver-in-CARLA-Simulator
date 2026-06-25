@@ -170,3 +170,127 @@ This work was conducted as part of **IIT Roorkee's Google ExploreCSR program** �
 ## License
 
 MIT — see [LICENSE](LICENSE)
+### Why DDPG for Lane Changes?
+DDPG's actor-critic architecture handles **continuous action spaces** (steering angle, throttle, brake) with high precision. The lane-change sub-task requires fine-grained control where discrete action spaces fail.
+
+### Why TD3 for Straight Driving?
+TD3 addresses DDPG's overestimation bias using a **twin-critic architecture** and delayed policy updates — critical for maintaining stable trajectories in dynamic traffic with unpredictable agents.
+
+---
+
+## Sensor & Input Pipeline
+
+```
+Depth Camera → Depth Map (per-pixel distance encoding)
+                    ↓
+           Obstacle Detection Module
+                    ↓
+           State Vector Construction
+           [ego velocity, lane position,
+            lead vehicle distance, heading error]
+                    ↓
+            HDRL Policy Network
+                    ↓
+           Continuous Action Output
+           [steering ∈ [-1,1], throttle ∈ [0,1]]
+```
+
+---
+
+## Training Curves
+
+Actor and critic loss curves at 500, 1000, and 1500 episodes are included in the repo (`Actor Loss_500.png`, `Critic Loss_1000.png`, etc.), showing convergence behavior across training stages.
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- CARLA Simulator 0.9.x ([download](https://carla.org/))
+- Python 3.8+
+- PyTorch, NumPy, OpenCV
+
+```bash
+pip install -r requirements.txt
+```
+
+### Run the DDPG Agent
+
+```bash
+# Start CARLA server first
+./CarlaUE4.exe -windowed -ResX=800 -ResY=600
+
+# Train the lane-change agent
+python carla_DDPG.py --episodes 1500 --task lane_change
+```
+
+### Run Automatic Control (Baseline)
+
+```bash
+python automatic_control.py
+```
+
+### Replay a Recorded Session
+
+```bash
+python start_replaying.py --file <recording_file>
+```
+
+---
+
+## Project Structure
+
+```
+├── carla_DDPG.py          # Main DDPG training loop
+├── nn_actor_critic.py     # Actor-Critic network definitions
+├── model.py               # TD3 model implementation
+├── environment.py         # CARLA environment wrapper
+├── utility.py             # Reward shaping, state extraction
+├── TD3/                   # TD3 agent implementation
+├── Lane_Change_Model_*.pth # Pretrained DDPG checkpoints
+├── automatic_control.py   # Baseline autopilot
+└── requirements.txt
+```
+
+---
+
+## Pretrained Models
+
+Pretrained DDPG checkpoints are included for immediate evaluation:
+
+| File | Description |
+|---|---|
+| `Lane_Change_Model_DDPGactor.pth` | Actor network weights |
+| `Lane_Change_Model_DDPGcritic.pth` | Critic network weights |
+| `Lane_Change_Model_target_actor.pth` | Target actor (stable training copy) |
+| `Lane_Change_Model_target_critic.pth` | Target critic |
+
+---
+
+## Research Context
+
+This work was conducted as part of **IIT Roorkee's Google ExploreCSR program** — a competitive research initiative focused on advancing core computer science research. The hierarchical DRL approach directly addresses the **sim-to-real transfer** challenge in autonomous driving, with architecture decisions informed by:
+
+- Li & Okhrin (2023) — platform-agnostic deep RL for sim2real transfer
+- Gangopadhyay et al. (2021) — hierarchical program-triggered RL for automated driving
+- Cimurs et al. (2021) — goal-driven autonomous exploration via deep RL
+
+---
+
+## Team
+
+| Name | Institution |
+|---|---|
+| **Drashti Bhavsar** | Pandit Deendayal Energy University |
+| Animesh Basak | NIT Arunachal Pradesh |
+| Ishita Jindal | Chitkara University |
+| Sanskriti Chandra | IIIT Naya Raipur |
+
+**Guided by:** Prof. Dr. Neetesh Kumar & Shikhar Singh Lodhi, IIT Roorkee
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE)
